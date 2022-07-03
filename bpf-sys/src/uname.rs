@@ -69,7 +69,6 @@ fn parse_version_signature(signature: &str) -> Option<String> {
 
 fn parse_version(version: &str) -> Option<(u32, u32, u32)> {
     if let Some(version) = version.splitn(2, '-').next() {
-        if let Some(version) = version.splitn(2, '+').next() {
             let parts: Vec<_> = version
                 .splitn(4, '.')
                 .filter_map(|v| u32::from_str(v).ok())
@@ -78,7 +77,6 @@ fn parse_version(version: &str) -> Option<(u32, u32, u32)> {
                 return None;
             }
             return Some((parts[0], parts[1], parts[2]));
-        }
     }
 
     None
@@ -91,6 +89,7 @@ mod test {
     #[test]
     fn test_parse_version() {
         assert_eq!(parse_version("5.10.93.2-microsoft-standard-WSL2"), Some((5, 10, 93)));
+        assert_eq!(parse_version("5.10.102.1-microsoft-standard-WSL2+"), Some((5, 10, 102)));
         assert_eq!(parse_version("4.15.18"), Some((4, 15, 18)));
         assert_eq!(parse_version("4.15.1-generic"), Some((4, 15, 1)));
         assert_eq!(parse_version("4.15.1-generic-foo"), Some((4, 15, 1)));
